@@ -69,6 +69,54 @@ router.delete("/delete-incident/:id", async (req, res) => {
     res.status(500).send("Error deleting the incident.");
   }
 });
+const getIncidentsByType = async (selectedType) => {
+  try {
+    console.log("Querying incidents for type:", selectedType);
+
+    // Use Mongoose query to fetch incidents based on type
+    const incidents = await Incident.find({ type: selectedType });
+
+    console.log("Incidents:", incidents);
+
+    return incidents;
+  } catch (error) {
+    console.error("Error getting incidents by type:", error);
+    throw error;
+  }
+};
+
+router.get("/getincidentsbytype/:type", (req, res) => {
+  const selectedType = req.params.type.toLowerCase();
+
+  console.log("Selected Type:", selectedType);
+
+  try {
+    const incidents = getIncidentsByType(selectedType);
+    res.status(200).json(incidents);
+  } catch (error) {
+    console.error("Error getting incidents by type:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/get-incidents-by-type/:type", async (req, res) => {
+  const incidentType = req.params.type;
+
+  try {
+    const incidents = await Incident.find({ type: incidentType });
+
+    if (incidents.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No incidents found for the specified type" });
+    }
+
+    res.status(200).json(incidents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching incidents by type.");
+  }
+});
 
 router.get("/getincidentsinregion/:region", getIncidentsInRegion);
 
