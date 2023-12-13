@@ -5,7 +5,7 @@ import axios from "axios";
 
 const GeoFind = () => {
   const map = useMap();
-  const [selectedZone, setSelectedZone] = useState(null);
+  const [selectedZone, setSelectedZone] = useState("Accident");
   const [zoneData, setZoneData] = useState(null);
 
   useEffect(() => {
@@ -13,7 +13,6 @@ const GeoFind = () => {
 
     const fetchData = async () => {
       try {
-        // Check if selectedZone is not null before making the API call
         if (selectedZone) {
           const response = await axios.get(
             `http://localhost:5000/user/get-incidents-by-type/${selectedZone}`
@@ -26,44 +25,44 @@ const GeoFind = () => {
       }
     };
 
-    // Fetch data on component mount
     fetchData();
   }, [selectedZone]);
 
   useEffect(() => {
-    // Clear previous zones on the map
     map.eachLayer((layer) => {
       if (layer instanceof L.Rectangle || layer instanceof L.Circle) {
         map.removeLayer(layer);
       }
     });
 
-    // Display new zones based on the fetched data
     if (zoneData) {
-      if (selectedZone === "Traffic") {
-        L.rectangle([
-          [zoneData.lat1, zoneData.lon1],
-          [zoneData.lat2, zoneData.lon2],
-        ])
-          .addTo(map)
-          .bindPopup("Traffic Zone");
-      } else if (selectedZone === "Accident") {
-        console.log("Accident Zone Data:", zoneData);
-        L.circle(
-          [zoneData.location.coordinates[0], zoneData.location.coordinates[1]],
-          {
-            radius: 200,
+      zoneData.forEach((incident) => {
+        if (selectedZone === "Traffic") {
+          if (incident.location && incident.location.coordinates) {
+            const [lat, lon] = incident.location.coordinates;
+            L.circle([lat, lon], { radius: 200 })
+              .addTo(map)
+              .bindPopup("Traffic Zone");
           }
-        )
-          .addTo(map)
-          .bindPopup("Accidents Zone");
-      }
+        } else if (selectedZone === "Accident") {
+          if (incident.location && incident.location.coordinates) {
+            const [lat, lon] = incident.location.coordinates;
+            L.circle([lat, lon], { radius: 200 })
+              .addTo(map)
+              .bindPopup("Accidents Zone");
+          }
+        }
+      });
 
-      // Fit the map bounds to the new zones
-      map.fitBounds([
-        [zoneData.lat1, zoneData.lon1],
-        [zoneData.lat2, zoneData.lon2],
-      ]);
+      if (selectedZone === "Traffic") {
+        // Fit the map bounds based on the first incident's location
+        const [lat, lon] = zoneData[0].location.coordinates;
+        map.fitBounds([[lat, lon]]);
+      } else if (selectedZone === "Accident" && zoneData.length > 0) {
+        // Fit the map bounds based on the first incident's location
+        const [lat, lon] = zoneData[0].location.coordinates;
+        map.fitBounds([[lat, lon]]);
+      }
     }
   }, [selectedZone, zoneData, map]);
 
@@ -75,8 +74,6 @@ const GeoFind = () => {
         var latlng = e.geocode.center;
         L.marker(latlng).addTo(map).bindPopup(e.geocode.name).openPopup();
         map.fitBounds(e.geocode.bbox);
-        // Set the selectedZone based on user input or other logic
-        // For example, you can set it based on the name or location
         setSelectedZone(e.geocode.name.toLowerCase());
       })
       .addTo(map);
