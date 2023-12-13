@@ -29,10 +29,10 @@ body {
   cursor: pointer;
 }
 
-.zone-buttons .traffic {
+.zone-buttons .Traffic {
   background-color: #4caf50; /* Green background color for "Zones de Trafic" button */
 }
 
-.zone-buttons .accidents {
+.zone-buttons .Accident {
   background-color: #ff0000; /* Red background color for "Zones d'Accidents" button */
 }

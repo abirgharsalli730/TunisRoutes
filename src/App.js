@@ -1,25 +1,33 @@
-import React, { useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
-import 'leaflet-control-geocoder/dist/Control.Geocoder.js';
-import L from 'leaflet';
+import React, { useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+import "leaflet-control-geocoder/dist/Control.Geocoder.js";
+import L from "leaflet";
 import styles from "./App.css";
-import GeoFind from './Components/GeoFind'; 
-import Footer from './Components/Footer';
+import GeoFind from "./Components/GeoFind";
+import Footer from "./Components/Footer";
 
 function App() {
   const position = [36.8065, 10.1815];
   const [selectedZone, setSelectedZone] = useState(null);
 
   const handleZoneChange = (zoneType) => {
+    console.log("Selected Zone:", zoneType);
     setSelectedZone(zoneType);
   };
 
   return (
     <div className="App">
-    <div className="zone-buttons">
-        <button onClick={() => handleZoneChange("traffic")} className="traffic">Zones de Trafic</button>
-        <button onClick={() => handleZoneChange("accidents")} className="accidents">Zones d'Accidents</button>
+      <div className="zone-buttons">
+        <button onClick={() => handleZoneChange("Traffic")} className="Traffic">
+          Zones de Trafic
+        </button>
+        <button
+          onClick={() => handleZoneChange("Accident")}
+          className="Accident"
+        >
+          Zones d'Accidents
+        </button>
       </div>
       <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
         <TileLayer
@@ -29,9 +37,8 @@ function App() {
         {/*  <LeafletGeocoder /> */}
         <GeoFind />
       </MapContainer>
-      <Footer/>
+      <Footer />
     </div>
-    
   );
 }
 

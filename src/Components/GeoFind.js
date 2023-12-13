@@ -9,18 +9,25 @@ const GeoFind = () => {
   const [zoneData, setZoneData] = useState(null);
 
   useEffect(() => {
+    console.log("Selected Zone Changed:", selectedZone);
+
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/api/${selectedZone}`);
-        setZoneData(response.data);
+        // Check if selectedZone is not null before making the API call
+        if (selectedZone) {
+          const response = await axios.get(
+            `http://localhost:5000/user/get-incidents-by-type/${selectedZone}`
+          );
+          console.log("Fetched Zone Data:", response.data);
+          setZoneData(response.data);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    if (selectedZone) {
-      fetchData();
-    }
+    // Fetch data on component mount
+    fetchData();
   }, [selectedZone]);
 
   useEffect(() => {
@@ -33,18 +40,30 @@ const GeoFind = () => {
 
     // Display new zones based on the fetched data
     if (zoneData) {
-      if (selectedZone === "traffic") {
-        L.rectangle([[zoneData.lat1, zoneData.lon1], [zoneData.lat2, zoneData.lon2]])
+      if (selectedZone === "Traffic") {
+        L.rectangle([
+          [zoneData.lat1, zoneData.lon1],
+          [zoneData.lat2, zoneData.lon2],
+        ])
           .addTo(map)
           .bindPopup("Traffic Zone");
-      } else if (selectedZone === "accidents") {
-        L.circle([zoneData.lat, zoneData.lon], { radius: 200 })
+      } else if (selectedZone === "Accident") {
+        console.log("Accident Zone Data:", zoneData);
+        L.circle(
+          [zoneData.location.coordinates[0], zoneData.location.coordinates[1]],
+          {
+            radius: 200,
+          }
+        )
           .addTo(map)
           .bindPopup("Accidents Zone");
       }
 
       // Fit the map bounds to the new zones
-      map.fitBounds([[zoneData.lat1, zoneData.lon1], [zoneData.lat2, zoneData.lon2]]);
+      map.fitBounds([
+        [zoneData.lat1, zoneData.lon1],
+        [zoneData.lat2, zoneData.lon2],
+      ]);
     }
   }, [selectedZone, zoneData, map]);
 
