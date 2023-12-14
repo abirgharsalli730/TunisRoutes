@@ -5,7 +5,7 @@ import axios from "axios";
 
 const GeoFind = () => {
   const map = useMap();
-  const [selectedZone, setSelectedZone] = useState("Accident");
+  const [selectedZone, setSelectedZone] = useState("Traffic");
   const [zoneData, setZoneData] = useState(null);
 
   useEffect(() => {
