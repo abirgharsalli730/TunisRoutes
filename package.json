@@ -7,6 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.2",
+    "buffer": "^6.0.3",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",
     "leaflet-routing-machine": "^3.2.12",
@@ -14,14 +15,20 @@
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "timers-browserify": "^2.0.12",
+    "web-vitals": "^2.1.4",
+    "xml2js": "^0.6.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "proxy": "http://localhost:5000"
+  },
+  "resolutions": {
+    "buffer": "latest",
+    "timers": "latest"
   },
   "eslintConfig": {
     "extends": [
@@ -40,5 +47,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1"
   }
 }

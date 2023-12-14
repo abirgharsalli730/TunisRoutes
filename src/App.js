@@ -6,6 +6,7 @@ import L from "leaflet";
 import styles from "./App.css";
 import GeoFind from "./Components/GeoFind";
 import Footer from "./Components/Footer";
+import Incidents from "./Components/Incidents";
 
 function App() {
   const position = [36.8065, 10.1815];
@@ -20,7 +21,8 @@ function App() {
     <div className="App">
       <div className="zone-buttons">
         <button onClick={() => handleZoneChange("Traffic")} className="Traffic">
-          Zones de Trafic
+          {" "}
+          Zones de Trafic{" "}
         </button>
         <button
           onClick={() => handleZoneChange("Accident")}
@@ -37,6 +39,7 @@ function App() {
         {/*  <LeafletGeocoder /> */}
         <GeoFind />
       </MapContainer>
+      <Incidents />
       <Footer />
     </div>
   );
